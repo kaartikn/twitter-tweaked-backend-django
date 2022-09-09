@@ -1,0 +1,13 @@
+. .venv/scripts/activate
+
+username: kaartik2000
+password: twittertweaked
+
+python manage.py makemigrations backend -- Migrate class to DB obj 
+python manage.py migrate -- to apply migrations
+
+python manage.py runserver
+
+Rejected:
+error=access_denied&state=Yqv3wc6yU4haz07QZAdeDQuT2ZepDv
+Accepted:
