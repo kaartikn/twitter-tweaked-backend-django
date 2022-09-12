@@ -3,3 +3,4 @@ django-rest-framework
 tweepy
 django-environ
 snscrape
+django_mysql

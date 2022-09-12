@@ -1,6 +1,6 @@
 import snscrape.modules.twitter as sntwitter
 
-def advancedSearch(searchQuery, limit = 1):
+def advancedSearch(searchQuery, limit = 10):
     tweets = []
     for tweet in sntwitter.TwitterSearchScraper(searchQuery).get_items():
         if len(tweets) == limit:
@@ -9,9 +9,7 @@ def advancedSearch(searchQuery, limit = 1):
             tweets.append([tweet.user.username, tweet.content, tweet.date])
     print(tweets)
 
-advancedSearch("liverpool")
-
-def queryBuilder(allWordsQuery : str = "", exactPhrase: str = "", anyOfTheseWords: list = [], noneOfTheseWords: list = [], theseHashtags: list = [], language: str = "", fromAccounts: list = [], toAccounts: list = [], mentioningAccounts: list = [], showReplies: bool = True, onlyShowReplies: bool = False, showLinks: bool = False, onlyShowTweetsWithLink: bool = False, minimumReplies: int = 0, minimumFaves: int = 0, minimumRTs: int = 0, fromDate: str = "", toDate: str = ""):
+def queryBuilder(allWordsQuery : str = "", exactPhrase: str = "", anyOfTheseWords: list = [], noneOfTheseWords: list = [], theseHashtags: list = [], fromAccounts: list = [], toAccounts: list = [], mentioningAccounts: list = [], minimumReplies: int = 0, minimumFaves: int = 0, minimumRTs: int = 0, language: str = "", toDate: str = "", fromDate: str = "",  showReplies: bool = True, onlyShowReplies: bool = False, showLinks: bool = False, onlyShowTweetsWithLink: bool = False):
     exactPhraseQuery = exactPhraseQueryBuilder(exactPhrase)
     anyWordsQuery = anyOfWordQueryBuilder(anyOfTheseWords)
     noneWordsQuery = noneOfWordQueryBuilder(noneOfTheseWords)
@@ -28,7 +26,7 @@ def queryBuilder(allWordsQuery : str = "", exactPhrase: str = "", anyOfTheseWord
     repliesFilterQuery = repliesFilterQueryBuilder(showReplies, onlyShowReplies)
     linksFilterQuery =  linksFilterQueryBuilder(showLinks, onlyShowTweetsWithLink)
 
-    query = queryBuilder(allWordsQuery, exactPhraseQuery, anyWordsQuery, noneWordsQuery, anyHashtagQuery, fromAccountsQuery, toAccountsQuery, mentioningAccountsQuery, minRepliesQuery, minFavesQuery, minRTsQuery, languageQuery, toDateQuery, fromDateQuery, repliesFilterQuery, linksFilterQuery)
+    query = queryBuilderFinal(allWordsQuery=allWordsQuery, exactPhraseQuery=exactPhraseQuery, anyWordsQuery=anyWordsQuery, noneWordsQuery=noneWordsQuery, hashtagQuery=anyHashtagQuery, fromAccountsQuery=fromAccountsQuery, toAccountsQuery=toAccountsQuery, mentioningAccountsQuery=mentioningAccountsQuery, minRepliesQuery=minRepliesQuery, minFavesQuery=minFavesQuery, minRTsQuery=minRTsQuery, languagesQuery=languageQuery, toDateQuery=toDateQuery, fromDateQuery=fromDateQuery, repliesFilterQuery=repliesFilterQuery, linksFilterQuery=linksFilterQuery)
     return query
 
 def exactPhraseQueryBuilder(exactPhrase: str):
@@ -40,7 +38,7 @@ def anyOfWordQueryBuilder(wordList: list):
         any_query = "("
         list_length = len(wordList)
         for idx, word in enumerate(wordList):
-            if(idx < list_length):
+            if(idx + 1 < list_length):
                 any_query += "{word} OR ".format(word=word)
             else:
                 any_query += "{word})".format(word=word)
@@ -59,7 +57,7 @@ def anyOfHashtagQueryBuilder(wordList: list):
         any_hashtag = "("
         list_length = len(wordList)
         for idx, word in enumerate(wordList):
-            if(idx < list_length):
+            if(idx + 1 < list_length):
                 any_hashtag += "#{word} OR ".format(word=word)
             else:
                 any_hashtag += "#{word})".format(word=word)
@@ -71,7 +69,7 @@ def fromAccountsQueryBuilder(wordList: list):
         from_accounts = "("
         list_length = len(wordList)
         for idx, word in enumerate(wordList):
-            if(idx < list_length):
+            if(idx + 1 < list_length):
                 from_accounts += "from:{word} OR ".format(word=word)
             else:
                 from_accounts += "{word})".format(word=word)
@@ -83,12 +81,11 @@ def toAccountsQueryBuilder(wordList: list):
         to_accounts = "("
         list_length = len(wordList)
         for idx, word in enumerate(wordList):
-            if(idx < list_length):
+            if(idx + 1 < list_length):
                 to_accounts += "to:{word} OR ".format(word=word)
             else:
                 to_accounts += "{word})".format(word=word)
     return to_accounts
-
 
 def mentioningAccountsQueryBuilder(wordList: list):
     mentioning_accounts = ""
@@ -96,7 +93,7 @@ def mentioningAccountsQueryBuilder(wordList: list):
         mentioning_accounts = "("
         list_length = len(wordList)
         for idx, word in enumerate(wordList):
-            if(idx < list_length):
+            if(idx + 1 < list_length):
                 mentioning_accounts += "@{word} OR ".format(word=word)
             else:
                 mentioning_accounts += "@{word})".format(word=word)
@@ -126,6 +123,6 @@ def repliesFilterQueryBuilder(showReplies: bool, onlyShowReplies: bool):
 def linksFilterQueryBuilder(showLinks: bool, onlyShowTweetsWithLink: bool):
     return "-filter:links" if showLinks == False else ("filter:links" if showLinks==True and onlyShowTweetsWithLink==True else "")
 
-def queryBuilder(allWordsQuery: str, exactPhraseQuery: str, anyWordsQuery: str, noneWordsQuery: str, anyHashTagQuery: str, fromAccountsQuery: str, toAccountsQuery: str, mentioningAccountsQuery: str, minRepliesQuery: str, minFavesQuery: str, minRTsQuery: str, languagesQuery:str, toDateQuery: str, fromDateQuery: str, repliesFilterQuery: str, linksFilterQuery: str):
-    query = "{allWordsQuery} {exactPhraseQuery} {anyWordsQuery} {noneWordsQuery} {anyHashTagQuery} {fromAccountsQuery} {toAccountsQuery} {mentioningAccountsQuery} {minRepliesQuery} {minFavesQuery} {minRTsQuery} {languageQuery} {toDateQuery} {fromDateQuery} {repliesFilterQuery} {linksFilterQuery}".format(allWordsQuery=allWordsQuery, exactPhraseQuery = exactPhraseQuery, anyWordsQuery=anyWordsQuery, noneWordsQuery=noneWordsQuery, anyHashtagQuery=anyHashTagQuery, fromAccountsQuery=fromAccountsQuery, toAccountsQuery=toAccountsQuery, mentioningAccountsQuery=mentioningAccountsQuery, minRepliesQuery=minRepliesQuery, minFavesQuery=minFavesQuery, minRTsQuery=minRTsQuery, languageQuery=languagesQuery, toDateQuery=toDateQuery, fromDateQuery=fromDateQuery, repliesFilterQuery=repliesFilterQuery, linksFilterQuery=linksFilterQuery)
+def queryBuilderFinal(allWordsQuery: str, exactPhraseQuery: str, anyWordsQuery: str, noneWordsQuery: str, hashtagQuery: str, fromAccountsQuery: str, toAccountsQuery: str, mentioningAccountsQuery: str, minRepliesQuery: str, minFavesQuery: str, minRTsQuery: str, languagesQuery:str, toDateQuery: str, fromDateQuery: str, repliesFilterQuery: str, linksFilterQuery: str):
+    query = "{allWordsQuery} {exactPhraseQuery} {anyWordsQuery} {noneWordsQuery} {anyHashTagQuery} {fromAccountsQuery} {toAccountsQuery} {mentioningAccountsQuery} {minRepliesQuery} {minFavesQuery} {minRTsQuery} {languageQuery} {toDateQuery} {fromDateQuery} {repliesFilterQuery} {linksFilterQuery}".format(allWordsQuery=allWordsQuery, exactPhraseQuery = exactPhraseQuery, anyWordsQuery=anyWordsQuery, noneWordsQuery=noneWordsQuery, anyHashTagQuery=hashtagQuery, fromAccountsQuery=fromAccountsQuery, toAccountsQuery=toAccountsQuery, mentioningAccountsQuery=mentioningAccountsQuery, minRepliesQuery=minRepliesQuery, minFavesQuery=minFavesQuery, minRTsQuery=minRTsQuery, languageQuery=languagesQuery, toDateQuery=toDateQuery, fromDateQuery=fromDateQuery, repliesFilterQuery=repliesFilterQuery, linksFilterQuery=linksFilterQuery)
     return query.strip()

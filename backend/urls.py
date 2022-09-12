@@ -21,5 +21,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('auth', views.getAuthURL),
     path('auth/callback', views.processCallbackAuth),
-    path('tweets', views.tweet)
+    path('tweets', views.tweet),
+    path('tweets/search', views.searchTweets)
 ]
