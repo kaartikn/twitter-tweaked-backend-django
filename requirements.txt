@@ -2,3 +2,4 @@ django
 django-rest-framework
 tweepy
 django-environ
+snscrape
