@@ -9,29 +9,19 @@ class Auth(models.Model):
     def __str__(self):
         return self.request_token
 
+class Authenticated(models.Model):
+    access_token = models.CharField(max_length = 128, primary_key=True)
+    email = models.CharField(max_length=64)
+    account_id = models.CharField(max_length=64)
+
+# Adjust the foreign Key relationship to map the fields here to account_ids
+class UserFavouriteAccounts(models.Model):
+    account_id = models.CharField(max_length=64)
+    favourited_id = models.CharField(max_length=64)
+
 class Payload(models.Model):
     payload = models.TextField()
-    responseStatus = models.IntegerField()
+    response_status = models.IntegerField()
 
     class Meta:
         managed = False
-
-class AdvancedSearch():
-    all_words_query : str
-    exact_phrase : str
-    any_of_these_words : list
-    none_of_these_words : list
-    hashtags: list
-    from_accounts: list
-    to_accounts: list
-    mentioning_accounts: list
-    min_replies: int
-    min_faves: int
-    min_retweets: int
-    language: str
-    to_date: str
-    from_date: str
-    show_replies: bool
-    show_replies_only: bool
-    show_links: bool
-    show_links_only: bool
