@@ -8,6 +8,7 @@ def advancedSearch(searchQuery, limit = 10):
         else:
             tweets.append([tweet.user.username, tweet.content, tweet.date])
     print(tweets)
+    return tweets
 
 def queryBuilder(allWordsQuery : str = "", exactPhrase: str = "", anyOfTheseWords: list = [], noneOfTheseWords: list = [], theseHashtags: list = [], fromAccounts: list = [], toAccounts: list = [], mentioningAccounts: list = [], minimumReplies: int = 0, minimumFaves: int = 0, minimumRTs: int = 0, language: str = "", toDate: str = "", fromDate: str = "",  showReplies: bool = True, onlyShowReplies: bool = False, showLinks: bool = False, onlyShowTweetsWithLink: bool = False):
     exactPhraseQuery = exactPhraseQueryBuilder(exactPhrase)

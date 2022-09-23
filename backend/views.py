@@ -78,8 +78,8 @@ def searchTweets(request: Request):
         content: AdvancedSearch = json.loads(request.body.decode('utf-8'))
 
         query = queryBuilder(content["all_words_query"], content["exact_phrase"], content["any_of_these_words"], content["none_of_these_words"], content["hashtags"], content["from_accounts"], content["to_accounts"], content["mentioning_accounts"], content["min_replies"], content["min_faves"], content["min_retweets"], content["language"], content["to_date"], content["from_date"], content["show_replies"], content["show_replies_only"], content["show_links"], content["show_links_only"])
-        advancedSearch(query)
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        tweets = advancedSearch(query)
+        return Response(tweets, status=status.HTTP_200_OK)
 
 
 

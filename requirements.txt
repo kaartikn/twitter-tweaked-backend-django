@@ -4,3 +4,4 @@ tweepy
 django-environ
 snscrape
 django_mysql
+django-cors-headers
