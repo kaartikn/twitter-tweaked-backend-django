@@ -93,6 +93,19 @@ def favouriteUser(request: Request):
             serializer.save()
         return Response(serializer.data, status=status.HTTP_200_OK)
 
+@api_view(['POST'])
+def favouriteUser(request: Request):
+    access_token = getRequestHeaderAccessToken(request)
+    verifyAccessToken(access_token)
+
+    # Expects a list of favourite users as request body
+    if request.method == 'POST':
+        req_body = getRequestBody(request)
+        serializer = UserFavouriteAccountsSerializer(data=req_body, many=True)
+        if serializer.is_valid():
+            serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 
 
