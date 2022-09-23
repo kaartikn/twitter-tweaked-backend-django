@@ -22,5 +22,6 @@ urlpatterns = [
     path('auth', views.getAuthURL),
     path('auth/callback', views.processCallbackAuth),
     path('tweets', views.tweet),
-    path('tweets/search', views.searchTweets)
+    path('tweets/search', views.searchTweets),
+    path('user/favouriteUsers', views.favouriteUser)
 ]

@@ -1,4 +1,3 @@
-import json
 import os
 from django.http import HttpResponseRedirect
 import tweepy
@@ -6,9 +5,9 @@ from backend.auth.credentialsVerifier import verifyAccessToken
 from backend.twitter_scrape.scrape import queryBuilder, advancedSearch
 
 from backend.auth.oauth1handler import getOAuth1UserHandlerUnauthorized, getOauth1UserHandlerAuthorized
-from backend.misc.misc import formatResponse
-from .models import AdvancedSearch, Auth, Payload
-from .serializers import AuthSerializer, PayloadSerializer
+from backend.misc.misc import formatResponse, getRequestBody, getRequestHeaderAccessToken
+from .models import Auth, Payload
+from .serializers import AuthSerializer, PayloadSerializer, UserFavouriteAccountsSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.request import Request
@@ -24,7 +23,6 @@ def getAuthURL(request: Request):
 
         request_token = oauth.request_token["oauth_token"]
         request_secret = oauth.request_token["oauth_token_secret"]
-
 
         auth = Auth(request_token, request_secret)
         auth.save()
@@ -59,27 +57,42 @@ def tweet(request: Request):
     access_token_secret = request.headers.get('Access-Token-Secret')
     verifyAccessToken(access_token)
 
+#Authentication stuff then tweet stuff
+
     if request.method == 'POST':
-        content = json.loads(request.body.decode('utf-8'))
+        req_body = getRequestBody(request)
         oauth = getOauth1UserHandlerAuthorized(access_token, access_token_secret)
         api = tweepy.API(oauth)
-        api.update_status(content['text'])
+        api.update_status(req_body['text'])
         # Look at how to use models to extract API Request Bodies
         
         return Response(status=status.HTTP_204_NO_CONTENT) 
 
 @api_view(['POST'])
 def searchTweets(request: Request):
-    access_token = request.headers.get('Access-Token')
+    access_token = getRequestHeaderAccessToken(request)
     # access_token_secret = request.headers.get('Access-Token-Secret')
     verifyAccessToken(access_token)
 
     if request.method == 'POST':
-        content: AdvancedSearch = json.loads(request.body.decode('utf-8'))
-
+        content = getRequestBody(request)
         query = queryBuilder(content["all_words_query"], content["exact_phrase"], content["any_of_these_words"], content["none_of_these_words"], content["hashtags"], content["from_accounts"], content["to_accounts"], content["mentioning_accounts"], content["min_replies"], content["min_faves"], content["min_retweets"], content["language"], content["to_date"], content["from_date"], content["show_replies"], content["show_replies_only"], content["show_links"], content["show_links_only"])
         tweets = advancedSearch(query)
         return Response(tweets, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+def favouriteUser(request: Request):
+    access_token = getRequestHeaderAccessToken(request)
+    verifyAccessToken(access_token)
+
+    # Expects a list of favourite users as request body
+    if request.method == 'POST':
+        req_body = getRequestBody(request)
+        serializer = UserFavouriteAccountsSerializer(data=req_body, many=True)
+        if serializer.is_valid():
+            serializer.save()
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
 
 
 
@@ -120,4 +133,4 @@ def searchTweets(request: Request):
 #         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
 #     elif request.method == 'DELETE':
 #         auth.delete()
-#         return Response(status=status.HTTP_204_NO_CONTENT)
+#         return Response(status=status.HTTP_204_NO_req_body)

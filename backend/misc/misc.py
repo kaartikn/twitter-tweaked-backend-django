@@ -1,3 +1,4 @@
+from rest_framework.request import Request
 import json
 
 def formatResponse(payload, responseStatus: int = 200):
@@ -23,3 +24,8 @@ def formatResponseTweetJSON(tweetUrl, date, content, renderedContent, replyCount
     }
     return response
 
+def getRequestBody(request: Request):
+    return json.loads(request.body.decode('utf-8'))
+
+def getRequestHeaderAccessToken(request: Request):
+    return request.headers.get('Access-Token')
