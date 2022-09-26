@@ -1,4 +1,5 @@
 import os
+import jsons
 from django.http import HttpResponseRedirect
 import tweepy
 from backend.auth.credentialsVerifier import verifyAccessToken
@@ -78,7 +79,11 @@ def searchTweets(request: Request):
         content = getRequestBody(request)
         query = queryBuilder(content["all_words_query"], content["exact_phrase"], content["any_of_these_words"], content["none_of_these_words"], content["hashtags"], content["from_accounts"], content["to_accounts"], content["mentioning_accounts"], content["min_replies"], content["min_faves"], content["min_retweets"], content["language"], content["to_date"], content["from_date"], content["show_replies"], content["show_replies_only"], content["show_links"], content["show_links_only"])
         tweets = advancedSearch(query)
-        return Response(tweets, status=status.HTTP_200_OK)
+        res = {
+            "query": query,
+            "tweets": jsons.dumps(tweets)
+        }
+        return Response(res, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def favouriteUser(request: Request):

@@ -1,4 +1,5 @@
 import snscrape.modules.twitter as sntwitter
+import jsons
 
 from backend.misc.misc import formatResponseTweetJSON
 
@@ -8,9 +9,8 @@ def advancedSearch(searchQuery, limit = 10):
         if len(tweets) == limit:
             break
         else:
-            formattedTweet = formatResponseTweetJSON(tweet.url, tweet.date, tweet.content, tweet.renderedContent, tweet.replyCount, tweet.retweetCount, tweet.likeCount, tweet.quoteCount, tweet.media, tweet.quotedTweet, tweet.user.username, tweet.user.username, tweet.user.verified, tweet.user.profileImageUrl, tweet.user.linkUrl)
+            formattedTweet = formatResponseTweetJSON(tweet.url, tweet.date, tweet.content, tweet.renderedContent, tweet.replyCount, tweet.retweetCount, tweet.likeCount, tweet.quoteCount, (tweet.media) if (tweet.media is None) else (jsons.dumps(tweet.media)), tweet.quotedTweet, tweet.user.username, tweet.user.displayname, tweet.user.verified, tweet.user.profileImageUrl, tweet.user.linkUrl)
             tweets.append(formattedTweet)
-    # print(tweets)
     return tweets
 
 def queryBuilder(allWordsQuery : str = "", exactPhrase: str = "", anyOfTheseWords: list = [], noneOfTheseWords: list = [], theseHashtags: list = [], fromAccounts: list = [], toAccounts: list = [], mentioningAccounts: list = [], minimumReplies: int = 0, minimumFaves: int = 0, minimumRTs: int = 0, language: str = "", toDate: str = "", fromDate: str = "",  showReplies: bool = True, onlyShowReplies: bool = False, showLinks: bool = False, onlyShowTweetsWithLink: bool = False):
