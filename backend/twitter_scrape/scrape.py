@@ -9,7 +9,7 @@ def advancedSearch(searchQuery, limit = 10):
         if len(tweets) == limit:
             break
         else:
-            formattedTweet = formatResponseTweetJSON(tweet.url, tweet.date, tweet.content, tweet.renderedContent, tweet.replyCount, tweet.retweetCount, tweet.likeCount, tweet.quoteCount, (tweet.media) if (tweet.media is None) else (jsons.dumps(tweet.media)), tweet.quotedTweet, tweet.user.username, tweet.user.displayname, tweet.user.verified, tweet.user.profileImageUrl, tweet.user.linkUrl)
+            formattedTweet = formatResponseTweetJSON(tweet.url, tweet.date, tweet.content, tweet.renderedContent, tweet.replyCount, tweet.retweetCount, tweet.likeCount, tweet.quoteCount, (tweet.media) if (tweet.media is None) else (jsons.dumps(tweet.media)), tweet.quotedTweet, tweet.id, tweet.mentionedUsers, tweet.hashtags, tweet.user.username, tweet.user.displayname, tweet.user.verified, tweet.user.profileImageUrl, tweet.user.linkUrl)
             tweets.append(formattedTweet)
     return tweets
 

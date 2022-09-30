@@ -23,5 +23,9 @@ urlpatterns = [
     path('auth/callback', views.processCallbackAuth),
     path('tweets', views.tweet),
     path('tweets/search', views.searchTweets),
-    path('user/favouriteUsers', views.favouriteUser)
+    path('user/favourite', views.favouriteUser),
+    path('tweets/favourite', views.favouriteTweet),
+    path('tweets/unfavourite', views.unfavouriteTweet),
+    path('tweets/retweet', views.retweetTweet),
+    path('tweets/unretweet', views.unretweetTweet)
 ]

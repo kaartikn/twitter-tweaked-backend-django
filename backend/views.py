@@ -28,8 +28,7 @@ def getAuthURL(request: Request):
         auth = Auth(request_token, request_secret)
         auth.save()
 
-        serializer = PayloadSerializer(formatResponse(authURL))
-
+        serializer = PayloadSerializer(formatResponse(authURL, status.HTTP_200_OK))
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
@@ -58,7 +57,7 @@ def tweet(request: Request):
     access_token_secret = request.headers.get('Access-Token-Secret')
     verifyAccessToken(access_token)
 
-#Authentication stuff then tweet stuff
+    #Authentication stuff then tweet stuff
 
     if request.method == 'POST':
         req_body = getRequestBody(request)
@@ -99,17 +98,62 @@ def favouriteUser(request: Request):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
-def favouriteUser(request: Request):
-    access_token = getRequestHeaderAccessToken(request)
+def favouriteTweet(request: Request):
+    access_token = request.headers.get('Access-Token')
+    access_token_secret = request.headers.get('Access-Token-Secret')
     verifyAccessToken(access_token)
 
     # Expects a list of favourite users as request body
     if request.method == 'POST':
         req_body = getRequestBody(request)
-        serializer = UserFavouriteAccountsSerializer(data=req_body, many=True)
-        if serializer.is_valid():
-            serializer.save()
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        oauth = getOauth1UserHandlerAuthorized(access_token, access_token_secret)
+        api = tweepy.API(oauth)
+        api.create_favorite(req_body['id'])
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['POST'])
+def unfavouriteTweet(request: Request):
+    access_token = request.headers.get('Access-Token')
+    access_token_secret = request.headers.get('Access-Token-Secret')
+    verifyAccessToken(access_token)
+
+    # Expects a list of favourite users as request body
+    if request.method == 'POST':
+        req_body = getRequestBody(request)
+        oauth = getOauth1UserHandlerAuthorized(access_token, access_token_secret)
+        api = tweepy.API(oauth)
+        api.destroy_favorite(req_body['id'])
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+@api_view(['POST'])
+def retweetTweet(request: Request):
+    access_token = request.headers.get('Access-Token')
+    access_token_secret = request.headers.get('Access-Token-Secret')
+    verifyAccessToken(access_token)
+
+    # Expects a list of favourite users as request body
+    if request.method == 'POST':
+        req_body = getRequestBody(request)
+        oauth = getOauth1UserHandlerAuthorized(access_token, access_token_secret)
+        api = tweepy.API(oauth)
+        api.retweet(req_body['id'])
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['POST'])
+def unretweetTweet(request: Request):
+    access_token = request.headers.get('Access-Token')
+    access_token_secret = request.headers.get('Access-Token-Secret')
+    verifyAccessToken(access_token)
+
+    # Expects a list of favourite users as request body
+    if request.method == 'POST':
+        req_body = getRequestBody(request)
+        oauth = getOauth1UserHandlerAuthorized(access_token, access_token_secret)
+        api = tweepy.API(oauth)
+        api.unretweet(req_body['id'])
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 
 
