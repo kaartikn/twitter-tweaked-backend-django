@@ -6,7 +6,7 @@ from backend.auth.credentialsVerifier import verifyAccessToken
 from backend.twitter_scrape.scrape import queryBuilder, advancedSearch
 
 from backend.auth.oauth1handler import getOAuth1UserHandlerUnauthorized, getOauth1UserHandlerAuthorized
-from backend.misc.misc import formatResponse, getRequestBody, getRequestHeaderAccessToken
+from backend.misc.misc import formatResponse, getRequestBody, getRequestHeaderAccessToken, getRequestHeaderAccessTokenSecret
 from .models import Auth, Payload
 from .serializers import AuthSerializer, PayloadSerializer, UserFavouriteAccountsSerializer
 from rest_framework.decorators import api_view
@@ -71,13 +71,13 @@ def tweet(request: Request):
 @api_view(['POST'])
 def searchTweets(request: Request):
     access_token = getRequestHeaderAccessToken(request)
-    # access_token_secret = request.headers.get('Access-Token-Secret')
+    access_token_secret = getRequestHeaderAccessTokenSecret(request)
     verifyAccessToken(access_token)
 
     if request.method == 'POST':
         content = getRequestBody(request)
         query = queryBuilder(content["all_words_query"], content["exact_phrase"], content["any_of_these_words"], content["none_of_these_words"], content["hashtags"], content["from_accounts"], content["to_accounts"], content["mentioning_accounts"], content["min_replies"], content["min_faves"], content["min_retweets"], content["language"], content["to_date"], content["from_date"], content["show_replies"], content["show_replies_only"], content["show_links"], content["show_links_only"])
-        tweets = advancedSearch(query)
+        tweets = advancedSearch(query, access_token, access_token_secret)
         res = {
             "query": query,
             "tweets": jsons.dumps(tweets)

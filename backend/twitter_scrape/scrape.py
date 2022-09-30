@@ -1,15 +1,20 @@
 import snscrape.modules.twitter as sntwitter
 import jsons
+from backend.auth.oauth1handler import getOAuth1UserHandlerUnauthorized, getOauth1UserHandlerAuthorized
+import tweepy
 
 from backend.misc.misc import formatResponseTweetJSON
 
-def advancedSearch(searchQuery, limit = 10):
+def advancedSearch(searchQuery, access_token, access_token_secret, limit = 10):
     tweets = []
+    oauth = getOauth1UserHandlerAuthorized(access_token, access_token_secret)
+
     for tweet in sntwitter.TwitterSearchScraper(searchQuery).get_items():
         if len(tweets) == limit:
             break
         else:
-            formattedTweet = formatResponseTweetJSON(tweet.url, tweet.date, tweet.content, tweet.renderedContent, tweet.replyCount, tweet.retweetCount, tweet.likeCount, tweet.quoteCount, (tweet.media) if (tweet.media is None) else (jsons.dumps(tweet.media)), tweet.quotedTweet, tweet.id, tweet.mentionedUsers, tweet.hashtags, tweet.user.username, tweet.user.displayname, tweet.user.verified, tweet.user.profileImageUrl, tweet.user.linkUrl)
+            tweepyTweet = tweepy.API(oauth).lookup_statuses([tweet.id])[0]
+            formattedTweet = formatResponseTweetJSON(tweet.url, tweet.date, tweet.content, tweet.renderedContent, tweet.replyCount, tweet.retweetCount, tweet.likeCount, tweet.quoteCount, (tweet.media) if (tweet.media is None) else (jsons.dumps(tweet.media)), tweet.quotedTweet, tweet.id, tweet.mentionedUsers, tweet.hashtags, tweepyTweet._json["favorited"], tweepyTweet._json["retweeted"], tweet.user.username, tweet.user.displayname, tweet.user.verified, tweet.user.profileImageUrl, tweet.user.linkUrl)
             tweets.append(formattedTweet)
     return tweets
 
