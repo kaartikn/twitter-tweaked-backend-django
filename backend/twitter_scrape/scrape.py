@@ -14,7 +14,7 @@ def advancedSearch(searchQuery, access_token, access_token_secret, limit = 10):
             break
         else:
             tweepyTweet = tweepy.API(oauth).lookup_statuses([tweet.id])[0]
-            formattedTweet = formatResponseTweetJSON(tweet.url, tweet.date, tweet.content, tweet.renderedContent, tweet.replyCount, tweet.retweetCount, tweet.likeCount, tweet.quoteCount, (tweet.media) if (tweet.media is None) else (jsons.dumps(tweet.media)), tweet.quotedTweet, tweet.id, tweet.mentionedUsers, tweet.hashtags, tweepyTweet._json["favorited"], tweepyTweet._json["retweeted"], tweet.user.username, tweet.user.displayname, tweet.user.verified, tweet.user.profileImageUrl, tweet.user.linkUrl)
+            formattedTweet = formatResponseTweetJSON(tweet.url, tweet.date, tweet.content, tweet.renderedContent, tweet.replyCount, tweet.retweetCount, tweet.likeCount, tweet.quoteCount, (tweet.media) if (tweet.media is None) else (jsons.dumps(tweet.media)), tweet.quotedTweet, str(tweet.id), tweet.mentionedUsers, tweet.hashtags, tweet.tcooutlinks, tweepyTweet._json["favorited"], tweepyTweet._json["retweeted"], tweet.user.username, tweet.user.displayname, tweet.user.verified, tweet.user.profileImageUrl, tweet.user.linkUrl)
             tweets.append(formattedTweet)
     return tweets
 

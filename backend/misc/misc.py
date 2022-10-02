@@ -4,7 +4,7 @@ import json
 def formatResponse(payload, responseStatus: int = 200):
     return {'payload': payload, 'response_status': responseStatus}
 
-def formatResponseTweetJSON(tweetUrl, date, content, renderedContent, replyCount, retweetCount, likeCount, quoteCount, media, quotedTweet, id, mentionedUsers, hashtags, favorited, retweeted, username, displayName, verified, profileImageUrl, profileUrl):
+def formatResponseTweetJSON(tweetUrl, date, content, renderedContent, replyCount, retweetCount, likeCount, quoteCount, media, quotedTweet, id, mentionedUsers, hashtags, tcolinks, favorited, retweeted, username, displayName, verified, profileImageUrl, profileUrl):
     response = {
     "tweetUrl": tweetUrl,
     "date": date,
@@ -19,6 +19,7 @@ def formatResponseTweetJSON(tweetUrl, date, content, renderedContent, replyCount
     "id": id, 
     "mentionedUsers": mentionedUsers, 
     "hashtags": hashtags,
+    "tcolinks": tcolinks,
     "favorited": favorited,
     "retweeted": retweeted,
     "username": username,
