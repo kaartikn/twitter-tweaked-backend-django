@@ -10,7 +10,7 @@ def getOAuth1UserHandlerUnauthorized() -> tweepy.OAuth1UserHandler :
     oauth1_user_handler = tweepy.OAuth1UserHandler(
         consumer_key=consumer_key, 
         consumer_secret=consumer_secret, 
-        callback='http://127.0.0.1:8081/auth/callback'
+        callback='https://www.twitter.com/home'
         )
 
     return oauth1_user_handler

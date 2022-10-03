@@ -19,8 +19,8 @@ from backend import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('auth', views.getAuthURL),
-    path('auth/callback', views.processCallbackAuth),
+    path('authURL', views.getAuthURL),
+    path('auth', views.storeCredentials),
     path('tweets', views.tweet),
     path('tweets/search', views.searchTweets),
     path('user/favourite', views.favouriteUser),

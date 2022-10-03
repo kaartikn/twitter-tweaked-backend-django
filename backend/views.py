@@ -8,7 +8,7 @@ from backend.twitter_scrape.scrape import queryBuilder, advancedSearch
 from backend.auth.oauth1handler import getOAuth1UserHandlerUnauthorized, getOauth1UserHandlerAuthorized
 from backend.misc.misc import formatResponse, getRequestBody, getRequestHeaderAccessToken, getRequestHeaderAccessTokenSecret
 from .models import Auth, Payload
-from .serializers import AuthSerializer, PayloadSerializer, UserFavouriteAccountsSerializer
+from .serializers import PayloadSerializer, UserFavouriteAccountsSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.request import Request
@@ -16,40 +16,44 @@ from rest_framework import status
 
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
-@api_view(['GET'])
+@api_view(['POST'])
 def getAuthURL(request: Request):
-    if request.method == 'GET':
+    if request.method == 'POST':
         oauth = getOAuth1UserHandlerUnauthorized()
         authURL = oauth.get_authorization_url()
 
-        request_token = oauth.request_token["oauth_token"]
-        request_secret = oauth.request_token["oauth_token_secret"]
+        # request_token = oauth.request_token["oauth_token"]
+        # request_secret = oauth.request_token["oauth_token_secret"]
 
-        auth = Auth(request_token, request_secret)
-        auth.save()
+        # auth = Auth(request_token, request_secret)
+        # auth.save()
 
         serializer = PayloadSerializer(formatResponse(authURL, status.HTTP_200_OK))
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-@api_view(['GET'])
-def processCallbackAuth(request: Request):
-    if request.GET.get('denied'):
-        serializer = PayloadSerializer(formatResponse("Access Denied", status.HTTP_401_UNAUTHORIZED))
-        return Response(serializer.data, status=status.HTTP_401_UNAUTHORIZED)
-    else:
-        oauth_token = request.GET.get('oauth_token')
-        oauth_verifier = request.GET.get('oauth_verifier')
-        auth = Auth.objects.get(request_token=oauth_token)
-        oauth = getOAuth1UserHandlerUnauthorized()
-        oauth.request_token = {
-            "oauth_token": auth.request_token,
-            "oauth_token_secret": auth.request_secret
-        }
+@api_view(['POST'])
+def storeCredentials(request: Request):
+    # oauth_token = request.GET.get('oauth_token')
+    # oauth_verifier = request.GET.get('oauth_verifier')
+    # auth = Auth.objects.get(request_token=oauth_token)
+    # oauth = getOAuth1UserHandlerUnauthorized()
+    # oauth.request_token = {
+    #     "oauth_token": auth.request_token,
+    #     "oauth_token_secret": auth.request_secret
+    # }
 
-        access_token, access_token_secret = oauth.get_access_token(oauth_verifier)
-        print("Access Token is  " + access_token)
-        print("Access Token Secret is  " +access_token_secret)
-        return HttpResponseRedirect("https://www.twitter.com")
+    if request.method == 'POST':
+        req_body = getRequestBody(request)
+        auth = Auth(req_body["twitter_session_id"], req_body["oauth_token"], req_body["oauth_verifier"])
+        auth.save()
+
+        return Response(status=status.HTTP_204_NO_CONTENT) 
+
+
+    # access_token, access_token_secret = oauth.get_access_token(oauth_verifier)
+    # print("Access Token is  " + access_token)
+    # print("Access Token Secret is  " +access_token_secret)
+    # return HttpResponseRedirect("https://www.twitter.com")
 
 @api_view(['POST'])
 def tweet(request: Request):

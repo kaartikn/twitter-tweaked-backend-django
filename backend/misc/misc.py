@@ -27,7 +27,7 @@ def formatResponseTweetJSON(tweetUrl, date, content, renderedContent, replyCount
     "verified": verified,
     "profileImageUrl": profileImageUrl,
     "profileUrl": profileUrl,
-    "isTweetActionsHidden": False # should change this to isQuotedTweet instead
+    "isQuotedTweet": False
     }
     return response
 
