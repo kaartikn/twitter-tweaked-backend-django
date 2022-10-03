@@ -27,6 +27,7 @@ def formatResponseTweetJSON(tweetUrl, date, content, renderedContent, replyCount
     "verified": verified,
     "profileImageUrl": profileImageUrl,
     "profileUrl": profileUrl,
+    "isTweetActionsHidden": False
     }
     return response
 
