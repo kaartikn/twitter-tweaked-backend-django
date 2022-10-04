@@ -13,7 +13,9 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 from pickle import TRUE
 from django.core.management.commands.runserver import Command as runserver
+from django.core.management.utils import get_random_secret_key
 import environ
+import os
 import pymysql  
 pymysql.install_as_MySQLdb()
 
@@ -21,27 +23,33 @@ pymysql.install_as_MySQLdb()
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
-
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-zg3s@xyingnj9g!%rmi^iq-_eaw=l0mt46iki%+=#@i(n_h!3h'
-
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['*']
-runserver.default_port = '8081'
-runserver.default_addr = '127.0.0.1'
-
 env = environ.Env()
 
 environ.Env.read_env()
 
-CONSUMERKEY = env('consumerKey')
+# CONSUMERKEY = env('consumerKey')
 
-CONSUMERSECRET = env('consumerSecret')
+# CONSUMERSECRET = env('consumerSecret')
 
+
+# Quick-start development settings - unsuitable for production
+# See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
+
+# SECURITY WARNING: keep the secret key used in production secret!
+SECRET_KEY = os.getenv("DJANGO_SECRET_KEY", get_random_secret_key())
+
+# 'django-insecure-zg3s@xyingnj9g!%rmi^iq-_eaw=l0mt46iki%+=#@i(n_h!3h'
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = os.getenv("DEBUG", "False") == "True"
+
+ALLOWED_HOSTS = ['*']
+# ALLOWED_HOSTS = os.getenv("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost").split(",")
+runserver.default_port = '8081'
+runserver.default_addr = '127.0.0.1'
+
+# DEVELOPMENT MODE: to configure database connection (test or prod)
+DEVELOPMENT_MODE = os.getenv("DEVELOPMENT_MODE", "False") == "True"
 
 # Application definition
 
@@ -95,11 +103,11 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'b8zfx2xzna6lnue7ymiv',
-        'USER': 'ukfeuz1pzdn1p5kv',
-        'HOST': 'b8zfx2xzna6lnue7ymiv-mysql.services.clever-cloud.com',
-        'PORT': '3306',
-        'PASSWORD': 'L9ngFblNeQsWx5V3mk3b'
+        'NAME': 'defaultdb',
+        'USER': 'doadmin',
+        'HOST': 'db-mysql-nyc1-36973-do-user-12581374-0.b.db.ondigitalocean.com',
+        'PORT': '25060',
+        'PASSWORD': 'AVNS_wEWF6JcPdRzJJjmQGfX'
     }
 }
 

@@ -2,8 +2,8 @@ import tweepy
 
 from django.conf import settings
 
-consumer_key = settings.CONSUMERKEY
-consumer_secret = settings.CONSUMERSECRET
+consumer_key = "mQGB54CXLKG12UqcPyKDvU97c"
+consumer_secret = "tKOcKKkUQMoAsTIS1irEVC2VBByvJV8YqVX2cbJ19Ds6yilD9f"
 
 def getOAuth1UserHandlerUnauthorized() -> tweepy.OAuth1UserHandler :
 
