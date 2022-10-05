@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-zg3s@xyingnj9g!%rmi^iq-_eaw=l0mt46iki%+=#@i(n_h!3h
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-runserver.default_port = '8081'
+runserver.default_port = '8000'
 runserver.default_addr = '127.0.0.1'
 
 env = environ.Env()
@@ -95,11 +95,11 @@ WSGI_APPLICATION = 'backend.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'b8zfx2xzna6lnue7ymiv',
-        'USER': 'ukfeuz1pzdn1p5kv',
-        'HOST': 'b8zfx2xzna6lnue7ymiv-mysql.services.clever-cloud.com',
-        'PORT': '3306',
-        'PASSWORD': 'L9ngFblNeQsWx5V3mk3b'
+        'NAME': 'test',
+        'USER': 'doadmin',
+        'HOST': 'db-mysql-nyc1-36973-do-user-12581374-0.b.db.ondigitalocean.com',
+        'PORT': '25060',
+        'PASSWORD': 'AVNS_wEWF6JcPdRzJJjmQGfX'
     }
 }
 

@@ -15,6 +15,10 @@ python manage.py migrate -- to apply migrations
 
 python manage.py runserver
 
+docker build --tag backend .
+
+docker run --publish 8000:8000 backend
+
 Rejected:
 error=access_denied&state=Yqv3wc6yU4haz07QZAdeDQuT2ZepDv
 Accepted:
