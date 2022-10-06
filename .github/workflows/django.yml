@@ -29,7 +29,7 @@ jobs:
     - name: Install doctl
       uses: digitalocean/action-doctl@v2
       with:
-        token: ${{ dop_v1_cac7de95ef89ca088e86d359305013d2d5bda67a428e86334a4de6a6dfbd9be1 }}
+        token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
     # SHOULD BE CHANGED LATER ^
 
     - name: Log in to DO Container Registry
