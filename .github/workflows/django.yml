@@ -13,7 +13,7 @@ jobs:
     strategy:
       max-parallel: 4
       matrix:
-        python-version: [3.7, 3.8, 3.9]
+        python-version: [3.8, 3.9]
 
     steps:
     - uses: actions/checkout@v3
@@ -30,13 +30,12 @@ jobs:
       uses: digitalocean/action-doctl@v2
       with:
         token: ${{ secrets.DIGITALOCEAN_ACCESS_TOKEN }}
-    # SHOULD BE CHANGED LATER ^
 
     - name: Log in to DO Container Registry
       run: doctl registry login --expiry-seconds 600
 
     - name: Build image
-      run: docker build -t registry.digitalocean.com/twitter-tweaked-backend backend
+      run: docker build -t registry.digitalocean.com/twitter-tweaked-backend .
 
     - name: Push image to DO container Registry
       run: docker push registry.digitalocean.com/twitter-tweaked-backend
