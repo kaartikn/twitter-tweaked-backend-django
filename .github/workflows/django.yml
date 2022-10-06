@@ -35,11 +35,11 @@ jobs:
       run: doctl registry login --expiry-seconds 600
 
     - name: Build image
-      run: docker build . --file Dockerfile --tag backend:latest
+      run: docker build . --file Dockerfile --tag registry.digitalocean.com/twitter-tweaked-backend/backend:latest
       # run: docker  backend build registry.digitalocean.com/twitter-tweaked-backend/backend .
 
     - name: Push image to DO container Registry
-      run: docker push registry.digitalocean.com/twitter-tweaked-backend/backend
+      run: docker push registry.digitalocean.com/twitter-tweaked-backend/backend:latest
 
 
 
