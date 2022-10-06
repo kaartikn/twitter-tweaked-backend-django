@@ -38,7 +38,7 @@ jobs:
       run: docker build -t registry.digitalocean.com/twitter-tweaked-backend .
 
     - name: Push image to DO container Registry
-      run: docker push registry.digitalocean.com/twitter-tweaked-backend:latest
+      run: docker push registry.digitalocean.com/twitter-tweaked-backend
 
 
 
