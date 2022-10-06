@@ -17,7 +17,7 @@ python manage.py runserver
 
 docker build --tag backend .
 
-docker run --publish 8000:8000 backend
+docker run --publish 8080:8080 backend
 
 Rejected:
 error=access_denied&state=Yqv3wc6yU4haz07QZAdeDQuT2ZepDv

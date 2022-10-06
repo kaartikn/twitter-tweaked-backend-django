@@ -31,7 +31,7 @@ SECRET_KEY = 'django-insecure-zg3s@xyingnj9g!%rmi^iq-_eaw=l0mt46iki%+=#@i(n_h!3h
 DEBUG = True
 
 ALLOWED_HOSTS = ['*']
-runserver.default_port = '8000'
+runserver.default_port = '8080'
 runserver.default_addr = '127.0.0.1'
 
 env = environ.Env()
