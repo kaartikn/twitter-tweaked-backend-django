@@ -81,7 +81,7 @@ def fromAccountsQueryBuilder(wordList: list):
             if(idx + 1 < list_length):
                 from_accounts += "from:{word} OR ".format(word=word)
             else:
-                from_accounts += "{word})".format(word=word)
+                from_accounts += "from:{word})".format(word=word)
     return from_accounts
 
 def toAccountsQueryBuilder(wordList: list):
@@ -93,7 +93,7 @@ def toAccountsQueryBuilder(wordList: list):
             if(idx + 1 < list_length):
                 to_accounts += "to:{word} OR ".format(word=word)
             else:
-                to_accounts += "{word})".format(word=word)
+                to_accounts += "to:{word})".format(word=word)
     return to_accounts
 
 def mentioningAccountsQueryBuilder(wordList: list):
@@ -133,5 +133,5 @@ def linksFilterQueryBuilder(showLinks: bool, onlyShowTweetsWithLink: bool):
     return "-filter:links" if showLinks == False else ("filter:links" if showLinks==True and onlyShowTweetsWithLink==True else "")
 
 def queryBuilderFinal(allWordsQuery: str, exactPhraseQuery: str, anyWordsQuery: str, noneWordsQuery: str, hashtagQuery: str, fromAccountsQuery: str, toAccountsQuery: str, mentioningAccountsQuery: str, minRepliesQuery: str, minFavesQuery: str, minRTsQuery: str, languagesQuery:str, toDateQuery: str, fromDateQuery: str, repliesFilterQuery: str, linksFilterQuery: str):
-    query = "{allWordsQuery} {exactPhraseQuery} {anyWordsQuery} {noneWordsQuery} {anyHashTagQuery} {fromAccountsQuery} {toAccountsQuery} {mentioningAccountsQuery} {minRepliesQuery} {minFavesQuery} {minRTsQuery} {languageQuery} {toDateQuery} {fromDateQuery} {repliesFilterQuery} {linksFilterQuery}".format(allWordsQuery=allWordsQuery, exactPhraseQuery = exactPhraseQuery, anyWordsQuery=anyWordsQuery, noneWordsQuery=noneWordsQuery, anyHashTagQuery=hashtagQuery, fromAccountsQuery=fromAccountsQuery, toAccountsQuery=toAccountsQuery, mentioningAccountsQuery=mentioningAccountsQuery, minRepliesQuery=minRepliesQuery, minFavesQuery=minFavesQuery, minRTsQuery=minRTsQuery, languageQuery=languagesQuery, toDateQuery=toDateQuery, fromDateQuery=fromDateQuery, repliesFilterQuery=repliesFilterQuery, linksFilterQuery=linksFilterQuery)
+    query = "{allWordsQuery} {exactPhraseQuery} {anyWordsQuery} {noneWordsQuery} {anyHashTagQuery} {fromAccountsQuery} {toAccountsQuery} {mentioningAccountsQuery} {minRepliesQuery} {minFavesQuery} {minRTsQuery} {languageQuery} {toDateQuery} {fromDateQuery} {linksFilterQuery} {repliesFilterQuery}".format(allWordsQuery=allWordsQuery, exactPhraseQuery = exactPhraseQuery, anyWordsQuery=anyWordsQuery, noneWordsQuery=noneWordsQuery, anyHashTagQuery=hashtagQuery, fromAccountsQuery=fromAccountsQuery, toAccountsQuery=toAccountsQuery, mentioningAccountsQuery=mentioningAccountsQuery, minRepliesQuery=minRepliesQuery, minFavesQuery=minFavesQuery, minRTsQuery=minRTsQuery, languageQuery=languagesQuery, toDateQuery=toDateQuery, fromDateQuery=fromDateQuery, linksFilterQuery=linksFilterQuery, repliesFilterQuery=repliesFilterQuery)
     return query.strip()
