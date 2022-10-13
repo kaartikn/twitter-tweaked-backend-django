@@ -158,6 +158,19 @@ def unretweetTweet(request: Request):
         api.unretweet(req_body['id'])
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+@api_view(['GET'])
+def getPublicFollowing(request: Request):
+    access_token = request.headers.get('Access-Token')
+    access_token_secret = request.headers.get('Access-Token-Secret')
+    verifyAccessToken(access_token)
+
+    if request.method == 'GET':
+        oauth = getOauth1UserHandlerAuthorized(access_token, access_token_secret)
+        api = tweepy.API(oauth)
+        following = api.get_friends()
+        print(following[0])
+        return Response(following[0]._json, status=status.HTTP_200_OK)
+
 
 
 
