@@ -1,3 +1,4 @@
+import json
 import os
 import jsons
 from django.http import HttpResponseRedirect
@@ -22,38 +23,51 @@ def getAuthURL(request: Request):
         oauth = getOAuth1UserHandlerUnauthorized()
         authURL = oauth.get_authorization_url()
 
-        # request_token = oauth.request_token["oauth_token"]
-        # request_secret = oauth.request_token["oauth_token_secret"]
+        request_token = oauth.request_token["oauth_token"]
+        request_secret = oauth.request_token["oauth_token_secret"]
 
         # auth = Auth(request_token, request_secret)
         # auth.save()
 
-        serializer = PayloadSerializer(formatResponse(authURL, status.HTTP_200_OK))
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        resp = {}
+        resp["request_token"] = request_token
+        resp["request_secret"] = request_secret
+        resp["auth_url"] = authURL
+        print(type(resp))
+
+        ret = formatResponse(resp, status.HTTP_200_OK)
+        return Response(ret, status=status.HTTP_200_OK)
 
 @api_view(['POST'])
 def storeCredentials(request: Request):
-    # oauth_token = request.GET.get('oauth_token')
-    # oauth_verifier = request.GET.get('oauth_verifier')
-    # auth = Auth.objects.get(request_token=oauth_token)
-    # oauth = getOAuth1UserHandlerUnauthorized()
-    # oauth.request_token = {
-    #     "oauth_token": auth.request_token,
-    #     "oauth_token_secret": auth.request_secret
-    # }
-
     if request.method == 'POST':
         req_body = getRequestBody(request)
-        auth = Auth(req_body["twitter_session_id"], req_body["oauth_token"], req_body["oauth_verifier"])
+        print(req_body)
+
+        request_token = req_body["request_token"]
+        request_secret = req_body["request_secret"]
+        twitter_session_id = req_body["twitter_session_id"]
+        oauth_verifier = req_body["oauth_verifier"]
+
+        oauthHandler = getOAuth1UserHandlerUnauthorized()
+        oauthHandler.request_token = {
+            "oauth_token": request_token,
+            "oauth_token_secret": request_secret
+        }
+
+
+        access_token, access_token_secret = (
+            oauthHandler.get_access_token(
+                oauth_verifier
+            )
+        )
+
+        ret = {"access_token": access_token, "access_token_secret": access_token_secret}
+
+        auth = Auth(twitter_session_id, access_token, access_token_secret)
         auth.save()
 
-        return Response(status=status.HTTP_204_NO_CONTENT) 
-
-
-    # access_token, access_token_secret = oauth.get_access_token(oauth_verifier)
-    # print("Access Token is  " + access_token)
-    # print("Access Token Secret is  " +access_token_secret)
-    # return HttpResponseRedirect("https://www.twitter.com")
+        return Response(data=ret, status=status.HTTP_200_OK) 
 
 @api_view(['POST'])
 def tweet(request: Request):
@@ -168,7 +182,9 @@ def getPublicFollowing(request: Request):
         oauth = getOauth1UserHandlerAuthorized(access_token, access_token_secret)
         api = tweepy.API(oauth)
         following = api.get_friends()
-        print(following[0])
+        # print(following[0])
+        # print(api.get_friends())
+        # return Response(status=status.HTTP_204_NO_CONTENT)
         return Response(following[0]._json, status=status.HTTP_200_OK)
 
 

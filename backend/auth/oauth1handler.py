@@ -5,12 +5,12 @@ from django.conf import settings
 consumer_key = settings.CONSUMERKEY
 consumer_secret = settings.CONSUMERSECRET
 
-def getOAuth1UserHandlerUnauthorized() -> tweepy.OAuth1UserHandler :
+def getOAuth1UserHandlerUnauthorized():
 
     oauth1_user_handler = tweepy.OAuth1UserHandler(
         consumer_key=consumer_key, 
-        consumer_secret=consumer_secret, 
-        callback='https://www.twitter.com/home'
+        consumer_secret=consumer_secret,
+        callback="https://www.twitter.com/home"
         )
 
     return oauth1_user_handler
