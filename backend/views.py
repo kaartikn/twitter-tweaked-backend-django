@@ -1,3 +1,4 @@
+from itertools import count
 import json
 import os
 import jsons
@@ -173,7 +174,7 @@ def unretweetTweet(request: Request):
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 @api_view(['GET'])
-def getPublicFollowing(request: Request):
+def getFollowingIds(request: Request):
     access_token = request.headers.get('Access-Token')
     access_token_secret = request.headers.get('Access-Token-Secret')
     verifyAccessToken(access_token)
@@ -181,12 +182,41 @@ def getPublicFollowing(request: Request):
     if request.method == 'GET':
         oauth = getOauth1UserHandlerAuthorized(access_token, access_token_secret)
         api = tweepy.API(oauth)
-        following = api.get_friends()
-        # print(following[0])
-        # print(api.get_friends())
-        # return Response(status=status.HTTP_204_NO_CONTENT)
-        return Response(following[0]._json, status=status.HTTP_200_OK)
+        following_ids = api.get_friend_ids(count=5000, stringify_ids=True)
 
+        return Response(following_ids, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def getUsersFromIds(request: Request):
+    access_token = request.headers.get('Access-Token')
+    access_token_secret = request.headers.get('Access-Token-Secret')
+
+    if request.method == 'GET':
+        req_body = getRequestBody(request)
+        following_ids = req_body['following']
+        oauth = getOauth1UserHandlerAuthorized(access_token, access_token_secret)
+        api = tweepy.API(oauth)
+        users = api.lookup_users(user_id=following_ids)
+        retUsers = []
+        for user in users:
+            retUsers.append(user._json)
+
+        return Response(retUsers, status=status.HTTP_200_OK)
+
+    
+
+# @api_view(['GET'])
+# def getPublicFollowingIds(request: Request):
+#     access_token = request.headers.get('Access-Token')
+#     access_token_secret = request.headers.get('Access-Token-Secret')
+#     verifyAccessToken(access_token)
+
+#     if request.method == 'GET':
+#         oauth = getOauth1UserHandlerAuthorized(access_token, access_token_secret)
+#         api = tweepy.API(oauth)
+#         following_ids = api.get_friend_ids(count=5000)
+
+#         return Response(following_ids, status=status.HTTP_200_OK)
 
 
 

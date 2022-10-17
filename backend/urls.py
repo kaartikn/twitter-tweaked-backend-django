@@ -28,5 +28,6 @@ urlpatterns = [
     path('tweets/unfavourite', views.unfavouriteTweet),
     path('tweets/retweet', views.retweetTweet),
     path('tweets/unretweet', views.unretweetTweet),
-    path('following', views.getPublicFollowing)
+    path('following', views.getFollowingIds),
+    path('users', views.getUsersFromIds)
 ]
