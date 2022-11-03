@@ -5,7 +5,7 @@ import jsons
 from django.http import HttpResponseRedirect
 import tweepy
 from backend.auth.credentialsVerifier import verifyAccessToken
-from backend.twitter_scrape.scrape import queryBuilder, advancedSearch
+from backend.twitter_scrape.scrape import queryBuilder, advancedSearch, getUserFromTwitterID, getTopTweetsFromUserHelper
 
 from backend.auth.oauth1handler import getOAuth1UserHandlerUnauthorized, getOauth1UserHandlerAuthorized
 from backend.misc.misc import formatResponse, getRequestBody, getRequestHeaderAccessToken, getRequestHeaderAccessTokenSecret
@@ -186,41 +186,42 @@ def getFollowingIds(request: Request):
 
         return Response(following_ids, status=status.HTTP_200_OK)
 
+# @api_view(['GET'])
+# def getUsersFromIds(request: Request):
+#     access_token = request.headers.get('Access-Token')
+#     access_token_secret = request.headers.get('Access-Token-Secret')
+
+#     if request.method == 'GET':
+#         req_body = getRequestBody(request)
+#         following_ids = req_body['following']
+#         oauth = getOauth1UserHandlerAuthorized(access_token, access_token_secret)
+#         api = tweepy.API(oauth)
+#         users = api.lookup_users(user_id=following_ids)
+#         retUsers = []
+#         for user in users:
+#             retUsers.append(user._json)
+
+#         return Response(retUsers, status=status.HTTP_200_OK)
+
 @api_view(['GET'])
-def getUsersFromIds(request: Request):
+def getUserFromUserId(request: Request):
+    if request.method == 'GET':
+        username = request.GET.get('username')
+        userId = request.GET.get('user-id')
+
+        user = getUserFromTwitterID(userId, True) if (username is None) else getUserFromTwitterID(username, False)
+        return Response(user, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def getTopTweetsFromUser(request: Request):
     access_token = request.headers.get('Access-Token')
     access_token_secret = request.headers.get('Access-Token-Secret')
 
     if request.method == 'GET':
-        req_body = getRequestBody(request)
-        following_ids = req_body['following']
-        oauth = getOauth1UserHandlerAuthorized(access_token, access_token_secret)
-        api = tweepy.API(oauth)
-        users = api.lookup_users(user_id=following_ids)
-        retUsers = []
-        for user in users:
-            retUsers.append(user._json)
+        username = request.GET.get('username')
 
-        return Response(retUsers, status=status.HTTP_200_OK)
-
-    
-
-# @api_view(['GET'])
-# def getPublicFollowingIds(request: Request):
-#     access_token = request.headers.get('Access-Token')
-#     access_token_secret = request.headers.get('Access-Token-Secret')
-#     verifyAccessToken(access_token)
-
-#     if request.method == 'GET':
-#         oauth = getOauth1UserHandlerAuthorized(access_token, access_token_secret)
-#         api = tweepy.API(oauth)
-#         following_ids = api.get_friend_ids(count=5000)
-
-#         return Response(following_ids, status=status.HTTP_200_OK)
-
-
-
-
+        res = getTopTweetsFromUserHelper(username, access_token, access_token_secret)
+        return Response(res, status=status.HTTP_200_OK)
 
 
 

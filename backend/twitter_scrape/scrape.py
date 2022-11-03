@@ -18,7 +18,7 @@ def advancedSearch(searchQuery, access_token, access_token_secret, limit = 10):
             tweets.append(formattedTweet)
     return tweets
 
-def queryBuilder(allWordsQuery : str = "", exactPhrase: str = "", anyOfTheseWords: list = [], noneOfTheseWords: list = [], theseHashtags: list = [], fromAccounts: list = [], toAccounts: list = [], mentioningAccounts: list = [], minimumReplies: int = 0, minimumFaves: int = 0, minimumRTs: int = 0, language: str = "", toDate: str = "", fromDate: str = "",  showReplies: bool = True, onlyShowReplies: bool = False, showLinks: bool = False, onlyShowTweetsWithLink: bool = False):
+def queryBuilder(allWordsQuery : str = "", exactPhrase: str = "", anyOfTheseWords: list = [], noneOfTheseWords: list = [], theseHashtags: list = [], fromAccounts: list = [], toAccounts: list = [], mentioningAccounts: list = [], minimumReplies: int = 0, minimumFaves: int = 0, minimumRTs: int = 0, language: str = "", toDate: str = "", fromDate: str = "",  showReplies: bool = True, onlyShowReplies: bool = False, showLinks: bool = True, onlyShowTweetsWithLink: bool = False):
     exactPhraseQuery = exactPhraseQueryBuilder(exactPhrase)
     anyWordsQuery = anyOfWordQueryBuilder(anyOfTheseWords)
     noneWordsQuery = noneOfWordQueryBuilder(noneOfTheseWords)
@@ -135,3 +135,15 @@ def linksFilterQueryBuilder(showLinks: bool, onlyShowTweetsWithLink: bool):
 def queryBuilderFinal(allWordsQuery: str, exactPhraseQuery: str, anyWordsQuery: str, noneWordsQuery: str, hashtagQuery: str, fromAccountsQuery: str, toAccountsQuery: str, mentioningAccountsQuery: str, minRepliesQuery: str, minFavesQuery: str, minRTsQuery: str, languagesQuery:str, toDateQuery: str, fromDateQuery: str, repliesFilterQuery: str, linksFilterQuery: str):
     query = "{allWordsQuery} {exactPhraseQuery} {anyWordsQuery} {noneWordsQuery} {anyHashTagQuery} {fromAccountsQuery} {toAccountsQuery} {mentioningAccountsQuery} {minRepliesQuery} {minFavesQuery} {minRTsQuery} {languageQuery} {toDateQuery} {fromDateQuery} {linksFilterQuery} {repliesFilterQuery}".format(allWordsQuery=allWordsQuery, exactPhraseQuery = exactPhraseQuery, anyWordsQuery=anyWordsQuery, noneWordsQuery=noneWordsQuery, anyHashTagQuery=hashtagQuery, fromAccountsQuery=fromAccountsQuery, toAccountsQuery=toAccountsQuery, mentioningAccountsQuery=mentioningAccountsQuery, minRepliesQuery=minRepliesQuery, minFavesQuery=minFavesQuery, minRTsQuery=minRTsQuery, languageQuery=languagesQuery, toDateQuery=toDateQuery, fromDateQuery=fromDateQuery, linksFilterQuery=linksFilterQuery, repliesFilterQuery=repliesFilterQuery)
     return query.strip()
+
+def getUserFromTwitterID(username, isUserId):
+    return jsons.dumps(sntwitter.TwitterUserScraper(username, isUserId).entity)
+
+def getTopTweetsFromUserHelper(from_account: str, access_token, access_token_secret):
+    query = queryBuilder(fromAccounts=[from_account], minimumFaves=50)
+    tweets = advancedSearch(query, access_token, access_token_secret)
+    res = {
+        "query": query,
+        "tweets": jsons.dumps(tweets)
+    }
+    return res
