@@ -186,23 +186,6 @@ def getFollowingIds(request: Request):
 
         return Response(following_ids, status=status.HTTP_200_OK)
 
-# @api_view(['GET'])
-# def getUsersFromIds(request: Request):
-#     access_token = request.headers.get('Access-Token')
-#     access_token_secret = request.headers.get('Access-Token-Secret')
-
-#     if request.method == 'GET':
-#         req_body = getRequestBody(request)
-#         following_ids = req_body['following']
-#         oauth = getOauth1UserHandlerAuthorized(access_token, access_token_secret)
-#         api = tweepy.API(oauth)
-#         users = api.lookup_users(user_id=following_ids)
-#         retUsers = []
-#         for user in users:
-#             retUsers.append(user._json)
-
-#         return Response(retUsers, status=status.HTTP_200_OK)
-
 @api_view(['GET'])
 def getUserFromUserId(request: Request):
     if request.method == 'GET':
@@ -222,6 +205,7 @@ def getTopTweetsFromUser(request: Request):
 
         res = getTopTweetsFromUserHelper(username, access_token, access_token_secret)
         return Response(res, status=status.HTTP_200_OK)
+
 
 
 
