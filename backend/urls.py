@@ -30,5 +30,7 @@ urlpatterns = [
     path('tweets/unretweet', views.unretweetTweet),
     path('following', views.getFollowingIds),
     path('users', views.getUserFromUserId),
-    path('tweets/top/user', views.getTopTweetsFromUser)
+    path('tweets/top/user', views.getTopTweetsFromUser),
+    path('tweets/conversation/user', views.getConversationBetweenUsers),
+    path('user', views.getMyUsername)
 ]

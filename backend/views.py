@@ -218,7 +218,16 @@ def getConversationBetweenUsers(request: Request):
         res = getConversationBetweenUsersHelper(user1, user2, access_token, access_token_secret)
         return Response(res, status=status.HTTP_200_OK)
 
+@api_view(['GET'])
+def getMyUsername(request: Request):
+    access_token = request.headers.get('Access-Token')
+    access_token_secret = request.headers.get('Access-Token-Secret')
 
+    if request.method == 'GET':
+        oauth = getOauth1UserHandlerAuthorized(access_token, access_token_secret)
+
+        username = tweepy.API(oauth).verify_credentials()._json['screen_name']
+        return Response(username, status=status.HTTP_200_OK)
 
 
 
