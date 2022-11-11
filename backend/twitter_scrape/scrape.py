@@ -152,3 +152,13 @@ def getTopTweetsFromUserHelper(from_account: str, access_token, access_token_sec
         "tweets": jsons.dumps(tweets)
     }
     return res
+
+def getConversationBetweenUsersHelper(account1: str, account2: str, access_token, access_token_secret):
+    query = f"(from:{account1} to:{account2}) OR (from:{account2} to:{account1}))" 
+    tweets = advancedSearch(query, access_token, access_token_secret)
+
+    res = {
+        "query": query,
+        "tweets": jsons.dumps(tweets)
+    }
+    return res

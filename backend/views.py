@@ -5,7 +5,7 @@ import jsons
 from django.http import HttpResponseRedirect
 import tweepy
 from backend.auth.credentialsVerifier import verifyAccessToken
-from backend.twitter_scrape.scrape import queryBuilder, advancedSearch, getUserFromTwitterID, getTopTweetsFromUserHelper
+from backend.twitter_scrape.scrape import queryBuilder, advancedSearch, getUserFromTwitterID, getTopTweetsFromUserHelper, getConversationBetweenUsersHelper
 
 from backend.auth.oauth1handler import getOAuth1UserHandlerUnauthorized, getOauth1UserHandlerAuthorized
 from backend.misc.misc import formatResponse, getRequestBody, getRequestHeaderAccessToken, getRequestHeaderAccessTokenSecret
@@ -206,7 +206,17 @@ def getTopTweetsFromUser(request: Request):
         res = getTopTweetsFromUserHelper(username, access_token, access_token_secret)
         return Response(res, status=status.HTTP_200_OK)
 
+@api_view(['GET'])
+def getConversationBetweenUsers(request: Request):
+    access_token = request.headers.get('Access-Token')
+    access_token_secret = request.headers.get('Access-Token-Secret')
 
+    if request.method == 'GET':
+        user1 = request.GET.get('user1')
+        user2 = request.GET.get('user2')
+
+        res = getConversationBetweenUsersHelper(user1, user2, access_token, access_token_secret)
+        return Response(res, status=status.HTTP_200_OK)
 
 
 
