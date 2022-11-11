@@ -192,8 +192,14 @@ def getUserFromUserId(request: Request):
         username = request.GET.get('username')
         userId = request.GET.get('user-id')
 
-        user = getUserFromTwitterID(userId, True) if (username is None) else getUserFromTwitterID(username, False)
-        return Response(user, status=status.HTTP_200_OK)
+        try:
+            user = getUserFromTwitterID(userId, True) if (username is None) else getUserFromTwitterID(username, False)            
+            return Response(jsons.dumps(user), status=status.HTTP_200_OK)
+        except ValueError:
+            return Response("Username does not exist", status=status.HTTP_404_NOT_FOUND)
+        except:
+            return Response("Other error occured", status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(['GET'])
 def getTopTweetsFromUser(request: Request):
@@ -227,7 +233,8 @@ def getMyUsername(request: Request):
         oauth = getOauth1UserHandlerAuthorized(access_token, access_token_secret)
 
         username = tweepy.API(oauth).verify_credentials()._json['screen_name']
-        return Response(username, status=status.HTTP_200_OK)
+        res = {"username": username}
+        return Response(res, status=status.HTTP_200_OK)
 
 
 

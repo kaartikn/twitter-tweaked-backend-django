@@ -137,7 +137,7 @@ def queryBuilderFinal(allWordsQuery: str, exactPhraseQuery: str, anyWordsQuery: 
     return query.strip()
 
 def getUserFromTwitterID(username, isUserId):
-    return jsons.dumps(sntwitter.TwitterUserScraper(username, isUserId).entity)
+    return sntwitter.TwitterUserScraper(username, isUserId).entity 
 
 def getTopTweetsFromUserHelper(from_account: str, access_token, access_token_secret):
     query = queryBuilder(fromAccounts=[from_account], minimumFaves=1000)
